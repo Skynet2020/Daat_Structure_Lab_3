@@ -3,18 +3,11 @@
 #include <vector>
 using namespace std;
 
+void evaluatePostFix(string);
+
 int main() {
 	
-	string postfixExp = "";
-	string infixExp;
-	for (char& ch : infixExp) {
-		switch (ch) {
-			case isdigit(ch) {
-
-			}
-		}
-	}
-
+	evaluatePostFix("4+4");
 
 	system("pause");
 	return 0;
@@ -29,8 +22,27 @@ int main() {
 
 
 
-
-
-
-
 */
+
+void evaluatePostFix(string par) {
+	vector <char> stack;
+	string postfixExp = "";
+	/*string infixExp;*/
+	for (char& ch : par) {
+		if (isdigit(ch)) {
+			stack.push_back(ch);
+		}
+		else {
+			switch (ch) {
+			case '+':
+				cout << "A '+' was encountered." << endl;
+			default:
+				cout << "The end of the switch." << endl;
+			}
+		}
+	}
+	int stackSize = stack.size();
+	for (int i = 0; i < stackSize; i++) {
+		cout << stack[i] << ' ';
+	} cout << endl;
+}
