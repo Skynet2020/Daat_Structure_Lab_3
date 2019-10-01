@@ -1,86 +1,142 @@
-///* C++ implementation to convert infix expression to postfix*/
-//// Note that here we use std::stack for Stack operations 
-//#include<bits/stdc++.h> 
-//using namespace std;
-//
-////Function to return precedence of operators 
-//int prec(char c)
-//{
-//	if (c == '^')
-//		return 3;
-//	else if (c == '*' || c == '/')
-//		return 2;
-//	else if (c == '+' || c == '-')
-//		return 1;
-//	else
-//		return -1;
-//}
-//
-//// The main function to convert infix expression 
-////to postfix expression 
-//void infixToPostfix(string s)
-//{
-//	std::stack<char> st;
-//	st.push('N');
-//	int l = s.length();
-//	string ns;
-//	for (int i = 0; i < l; i++)
-//	{
-//		// If the scanned character is an operand, add it to output string. 
-//		if ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z'))
-//			ns += s[i];
-//
-//		// If the scanned character is an ‘(‘, push it to the stack. 
-//		else if (s[i] == '(')
-//
-//			st.push('(');
-//
-//		// If the scanned character is an ‘)’, pop and to output string from the stack 
-//		// until an ‘(‘ is encountered. 
-//		else if (s[i] == ')')
-//		{
-//			while (st.top() != 'N' && st.top() != '(')
-//			{
-//				char c = st.top();
-//				st.pop();
-//				ns += c;
-//			}
-//			if (st.top() == '(')
-//			{
-//				char c = st.top();
-//				st.pop();
-//			}
-//		}
-//
-//		//If an operator is scanned 
-//		else {
-//			while (st.top() != 'N' && prec(s[i]) <= prec(st.top()))
-//			{
-//				char c = st.top();
-//				st.pop();
-//				ns += c;
-//			}
-//			st.push(s[i]);
-//		}
-//
-//	}
-//	//Pop all the remaining elements from the stack 
-//	while (st.top() != 'N')
-//	{
-//		char c = st.top();
-//		st.pop();
-//		ns += c;
-//	}
-//
-//	cout << ns << endl;
-//
-//}
-//
-////Driver program to test above functions 
-//int main()
-//{
-//	string exp = "a+b*(c^d-e)^(f+g*h)-i";
-//	infixToPostfix(exp);
-//	return 0;
-//}
-//// This code is contributed by Gautam Singh 
+/* 
+ * File:   main.cpp
+ * Author: Arman B. *
+ * Created on September 23, 2019, 10:04 PM
+ */
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <sstream>
+using namespace std;
+
+/*
+ * 
+ */
+
+bool push(vector <char>&, char&, int&);
+bool isEmpty(const int);
+bool pop(vector <char>&, int&);
+char peek();
+
+void displayStack(const vector <char>& stack);
+void extractIntegerWords(vector <double>& stack2, string str);
+
+int main(int argc, char** argv) {
+    int top;
+    vector <char> stack;
+
+    string str = "100 * 250";
+    for (char& ch : str){
+        if (ch != ' ' && ch != '+'){
+            cout << ch << ' ';
+            push(stack, ch, top);
+        }
+    } cout << endl;
+    displayStack(stack);
+    
+    vector<double> stack2;
+    extractIntegerWords(stack2, str);
+    cout << "\nStack2 content: ";
+    for (int i=0; i<stack2.size(); i++){
+        cout << stack2[i] << ' ';
+    } cout << endl;
+    cout << "Stack2 math: " << stack2[0] + stack2[1] << endl;
+    
+//    for (char& ch : str){
+//        if (isdigit(ch)){
+//           cout << "Push result: " << push(stack, ch) << endl;
+//        }
+//        else{
+//            switch (ch){
+//                case '+':
+//                cout << "A '+' operator was encountered" << endl;
+//                break;
+//            default:
+//                cout << "No operators were enterred" << endl;
+//                break;
+//            }
+//            
+//        }
+//    }
+//    for (int i=0; i<stack.size(); i++){
+//        cout << stack[i] << ' ';
+//    } cout << endl;
+//    int sum = stack[0];
+//    cout << "top: " << top << endl;
+//    
+//    int size = stack.size();
+//    for (int j=0; j<size; j++){
+//        pop(stack, top);
+//    }
+//    cout << "top: " << top << endl;
+       
+    
+    return 0;
+}
+
+bool isEmpty(const int top) {
+    return top < 0;
+}
+
+bool push(vector <char>& stack, char& ch, int& top){    
+    top++;
+    stack.push_back(ch);
+    bool result = true;
+    return result;
+}
+
+bool pop(vector <char>& stack, int& top){
+    bool result = false;
+    if(!isEmpty(top)){
+        top--;
+        stack.pop_back();
+        result = true;
+    }
+    return result;
+}
+
+char peek(vector <char>& stack, const int& top){
+    return stack[top];
+}
+
+
+void displayStack(const vector <char>& stack){
+    cout << "Stack content: ";
+    for (int i=0; i<stack.size(); i++){
+        if (i == stack.size()-1){
+            cout << stack[i] << endl;
+        } else {
+            cout << stack[i] << ", "; 
+        }        
+    } cout << endl;
+}
+
+
+void extractIntegerWords(vector<double>& stack, string str){ 
+    stringstream ss;
+    string strWithReplacedOperators, temp; 
+    double extractedDigit;
+    for (char& ch: str){
+        if (ch =='+' || ch=='-' || ch=='*' || ch=='/'){
+            strWithReplacedOperators += ' ';
+        } else {
+            strWithReplacedOperators += ch;
+        }
+    }
+    /* Storing the whole string into string stream */
+    ss << strWithReplacedOperators; 
+    /* Running loop till the end of the stream */    
+    while (!ss.eof()) {
+        /* extracting word by word from stream */
+        ss >> temp;
+        cout << "Extracting word by word: " << temp << ' ';
+        cout << endl;
+        /* Checking the given word is a number or not */
+        if (stringstream(temp) >> extractedDigit){
+            stack.push_back(extractedDigit); 
+        }            
+        /* To save from space at the end of string */
+        temp = ""; 
+    } 
+}
